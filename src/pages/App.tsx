@@ -5,20 +5,70 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Mic, MicOff, Code, Send, Lightbulb, BookOpen, ArrowLeft } from "lucide-react";
+import { Mic, MicOff, Code, Send, Lightbulb, BookOpen, ArrowLeft, Search } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
+import '../types/speech.d.ts';
+
+const programmingLanguages = [
+  { value: 'python', label: 'Python' },
+  { value: 'javascript', label: 'JavaScript' },
+  { value: 'typescript', label: 'TypeScript' },
+  { value: 'java', label: 'Java' },
+  { value: 'cpp', label: 'C++' },
+  { value: 'c', label: 'C' },
+  { value: 'csharp', label: 'C#' },
+  { value: 'go', label: 'Go' },
+  { value: 'rust', label: 'Rust' },
+  { value: 'swift', label: 'Swift' },
+  { value: 'kotlin', label: 'Kotlin' },
+  { value: 'php', label: 'PHP' },
+  { value: 'ruby', label: 'Ruby' },
+  { value: 'scala', label: 'Scala' },
+  { value: 'dart', label: 'Dart' },
+  { value: 'r', label: 'R' },
+  { value: 'matlab', label: 'MATLAB' },
+  { value: 'sql', label: 'SQL' },
+  { value: 'html', label: 'HTML' },
+  { value: 'css', label: 'CSS' },
+  { value: 'bash', label: 'Bash' },
+  { value: 'powershell', label: 'PowerShell' },
+  { value: 'perl', label: 'Perl' },
+  { value: 'lua', label: 'Lua' },
+  { value: 'haskell', label: 'Haskell' },
+  { value: 'clojure', label: 'Clojure' },
+  { value: 'elixir', label: 'Elixir' },
+  { value: 'erlang', label: 'Erlang' },
+  { value: 'fsharp', label: 'F#' },
+  { value: 'assembly', label: 'Assembly' },
+  { value: 'cobol', label: 'COBOL' },
+  { value: 'fortran', label: 'Fortran' },
+  { value: 'vba', label: 'VBA' },
+  { value: 'groovy', label: 'Groovy' },
+  { value: 'julia', label: 'Julia' },
+  { value: 'ocaml', label: 'OCaml' },
+  { value: 'scheme', label: 'Scheme' },
+  { value: 'prolog', label: 'Prolog' },
+  { value: 'verilog', label: 'Verilog' },
+  { value: 'vhdl', label: 'VHDL' }
+];
 
 const App = () => {
   const [code, setCode] = useState('');
   const [language, setLanguage] = useState('python');
+  const [languageSearch, setLanguageSearch] = useState('');
   const [prompt, setPrompt] = useState('');
-  const [apiKey, setApiKey] = useState('AIzaSyA7d2vdTfSw5AHjtMQUavOUOLFuiI43yOk');
+  const apiKey = 'AIzaSyA7d2vdTfSw5AHjtMQUavOUOLFuiI43yOk'; // Pre-configured for demo
   const [isListening, setIsListening] = useState(false);
   const [debugResult, setDebugResult] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const { toast } = useToast();
+
+  const filteredLanguages = programmingLanguages.filter(lang =>
+    lang.label.toLowerCase().includes(languageSearch.toLowerCase()) ||
+    lang.value.toLowerCase().includes(languageSearch.toLowerCase())
+  );
 
   const toggleVoiceRecognition = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -73,15 +123,6 @@ const App = () => {
   };
 
   const analyzeCode = async () => {
-    if (!apiKey.trim()) {
-      toast({
-        title: "API Key Required",
-        description: "Please enter your Gemini API key to use the debugging feature.",
-        variant: "destructive"
-      });
-      return;
-    }
-
     if (!code.trim() && !prompt.trim()) {
       toast({
         title: "Input Required",
@@ -158,7 +199,7 @@ Please provide a helpful explanation suitable for students learning to code.`
       console.error('Error analyzing code:', error);
       toast({
         title: "Analysis Failed",
-        description: "Failed to analyze code. Please check your API key and try again.",
+        description: "Failed to analyze code. Please try again.",
         variant: "destructive"
       });
     } finally {
@@ -197,33 +238,6 @@ Please provide a helpful explanation suitable for students learning to code.`
       </div>
 
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* API Key Input */}
-        <Card className="mb-6 bg-white/10 border-white/20 backdrop-blur-sm">
-          <CardHeader className="bg-gradient-to-r from-blue-500/20 to-indigo-600/20">
-            <CardTitle className="flex items-center gap-2 text-white">
-              <Lightbulb className="w-5 h-5" />
-              Configuration
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-blue-200">
-                Gemini API Key (Pre-configured for Demo)
-              </label>
-              <Input
-                type="password"
-                placeholder="Enter your Gemini API key here..."
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                className="bg-white/10 border-white/20 text-white placeholder:text-blue-300"
-              />
-              <p className="text-xs text-blue-300">
-                Your API key is stored locally and only used for debugging requests.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Input Section */}
           <div className="space-y-6">
@@ -237,23 +251,32 @@ Please provide a helpful explanation suitable for students learning to code.`
               </CardHeader>
               <CardContent className="pt-6">
                 <div className="space-y-4">
-                  <Select value={language} onValueChange={setLanguage}>
-                    <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="python">Python</SelectItem>
-                      <SelectItem value="javascript">JavaScript</SelectItem>
-                      <SelectItem value="java">Java</SelectItem>
-                      <SelectItem value="cpp">C++</SelectItem>
-                      <SelectItem value="c">C</SelectItem>
-                      <SelectItem value="html">HTML</SelectItem>
-                      <SelectItem value="css">CSS</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <div className="space-y-2">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-300 w-4 h-4" />
+                      <Input
+                        placeholder="Search programming languages..."
+                        value={languageSearch}
+                        onChange={(e) => setLanguageSearch(e.target.value)}
+                        className="bg-white/10 border-white/20 text-white placeholder:text-blue-300 pl-10"
+                      />
+                    </div>
+                    <Select value={language} onValueChange={setLanguage}>
+                      <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-60">
+                        {filteredLanguages.map((lang) => (
+                          <SelectItem key={lang.value} value={lang.value}>
+                            {lang.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                   
                   <Textarea
-                    placeholder={`Paste your ${language} code here for debugging...`}
+                    placeholder={`Paste your ${programmingLanguages.find(l => l.value === language)?.label || language} code here for debugging...`}
                     value={code}
                     onChange={(e) => setCode(e.target.value)}
                     rows={12}
