@@ -1,73 +1,122 @@
-# Welcome to your Lovable project
+# 🐞 debug-speak-solve
 
-## Project info
+A development tool and educational resource for practicing **rubber‑duck‑style debugging** by speaking your problem out loud and guiding yourself to a solution. Great for solo developers or teams wanting a structured approach to thinking through code issues.
 
-**URL**: https://lovable.dev/projects/508813ad-8c1f-4c62-bf27-5523108e480b
+## 🚀 What is it?
 
-## How can I edit this code?
+This project helps you debug by combining:
 
-There are several ways of editing your application.
+- **Interactive voice prompts** (text‑to‑speech and speech‑to‑text), enabling you to verbalize your problem and reasoning.
+- Structured **debug‑speak‑solve workflow**, inspired by the “rubber duck debugging” method: explain what your code should do, compare to what it does, and arrive at a fix :contentReference[oaicite:1]{index=1}.
+- Support for multiple programming languages and formats.
+- CLI interface and optionally browser UI for smoother experience.
 
-**Use Lovable**
+## 📦 Features
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/508813ad-8c1f-4c62-bf27-5523108e480b) and start prompting.
+- **Prompt your code problem** out loud via audio.
+- **Record your spoken reasoning**, transcribe it to text, and store logs.
+- **Self‑questioning prompts** to guide your debugging:  
+  “What did I expect to happen?”, “What did actually happen?”, “What difference matters most?”
+- Optional suggestions: link to relevant docs or StackOverflow search keywords.
+- Logging and playback support for reviewing your debugging session.
 
-Changes made via Lovable will be committed automatically to this repo.
+## ✅ Who is this for?
 
-**Use your preferred IDE**
+- Solo developers who want to debug effectively without pairing up.
+- Beginners learning to reason clearly about code behavior.
+- Developers practicing algorithm design or bug hunting through structured questioning.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 📁 Repository Structure
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+debug-speak-solve/
+├── cli/ # Command-line interface
+│ └── index.js # CLI entry point
+├── lib/ # Core logic modules
+│ ├── speech.ts # TTS / STT wrapper
+│ ├── prompts.ts # Predefined debugging prompts
+│ └── session.ts # Manages user session flow
+├── examples/ # Example scenarios and transcripts
+│ └── sampleSession.json
+├── docs/ # Documentation and guides
+│ └── workflow.md
+├── package.json # Project metadata + dependencies
+└── README.md # (this file)
 
-Follow these steps:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 🛠️ Installation & Getting Started
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+> Make sure you have Node.js v18+ installed.
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+git clone https://github.com/NanaOseiAssibeyAntwi/debug-speak-solve.git
+cd debug-speak-solve
+npm install
 npm run dev
-```
 
-**Edit a file directly in GitHub**
+Sample session flow
+Describe your bug aloud. Speech-to-text captures it.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Answer guided prompts verbally (or type if preferred).
 
-**Use GitHub Codespaces**
+Review transcript and identify key insights.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Iterate till you have a clear solution path.
 
-## What technologies are used for this project?
+🧠 How it works
+You speak the issue — e.g. “My loop doesn’t terminate when input is zero.”
 
-This project is built with:
+The system captures your words via speech recognition.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+You’re guided through structured reflection:
 
-## How can I deploy this project?
+“What should happen when input is zero?”
 
-Simply open [Lovable](https://lovable.dev/projects/508813ad-8c1f-4c62-bf27-5523108e480b) and click on Share -> Publish.
+“What is actually happening?”
 
-## Can I connect a custom domain to my Lovable project?
+“What difference seems key?”
 
-Yes, you can!
+You arrive at the bug and formulate a fix.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+A full session transcript saves to sessions/ for later review.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+✨ Why use this?
+Self‑explanatory debugging: speaking aloud often unlocks solutions you’d miss by reading silently.
+
+Cognitive clarity: prompts surface hidden assumptions, edge cases, and expectations.
+
+Reusable process: sessions can become study material, teaching resources, or pair-discussion logs.
+
+Session started: 2025-07-30 10:00
+User: “For input zero, the function returns 1 but I expect zero.”
+Prompt‑1: “What do you expect when input is zero?”
+Answer: “Return exactly zero.”
+Prompt‑2: “What is happening instead?”
+Answer: “It outputs 1 because of default case fall‑through.”
+Prompt‑3: “What difference matters most?”
+Answer: “The default return logic is executed even when input equals zero.”
+Conclusion: “Fix the conditional to prioritize input==0 branch before default.”
+Session saved to sessions/20250730‑1000.json
+
+
+🎯 Roadmap
+ Browser‑based UI with in‑page transcript and audio playback
+
+ Integration with major TTS/STT providers (Google, Azure, AWS, local)
+
+ Extend prompts for other debugging styles: performance, security, logic
+
+ Export session as PDF or shareable link
+
+🤝 Contribute
+Contributions welcome! You can:
+
+Suggest new prompts or session flows.
+
+Add support for other languages or runtime environments.
+
+Improve CLI experience or add UI.
+
+Please open issues or pull requests on GitHub.
+
+
+
